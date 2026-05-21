@@ -67,8 +67,12 @@ public class Gun : MonoBehaviour
             Shoot();
         }
 
-        // ===== 銃リコイル戻し =====
-
+        BackRecoil();
+    }
+    
+    void BackRecoil()
+    {
+       // 銃リコイル戻し
         gunTargetPosition = Vector3.Lerp(
             gunTargetPosition,
             Vector3.zero,
@@ -83,8 +87,9 @@ public class Gun : MonoBehaviour
 
         gunModel.localPosition =
             gunStartPosition + gunCurrentPosition;
-    }
 
+    }
+    
     void Shoot()
     {
         Debug.Log("発射！");
