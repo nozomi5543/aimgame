@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class Target : MonoBehaviour
 {
@@ -6,9 +7,27 @@ public class Target : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip hitSound;
 
+    [Header("電子表示")]
+    [SerializeField] private TextMeshPro hitText;
+
+    private void Start()
+    {
+        if (hitText != null)
+        {
+            hitText.text = "READY";
+            hitText.color = Color.cyan;
+        }
+    }
+
     public void Show()
     {
         gameObject.SetActive(true);
+
+        if (hitText != null)
+        {
+            hitText.text = "READY";
+            hitText.color = Color.cyan;
+        }
     }
 
     public void Hide()
@@ -30,11 +49,18 @@ public class Target : MonoBehaviour
             audioSource.PlayOneShot(hitSound);
         }
 
-        // 的を消す
-        Hide();
+        // 電子表示
+        if (hitText != null)
+        {
+            hitText.text = "HIT!";
+            hitText.color = Color.green;
+        }
+
+        // 少し待って消す
+        Invoke(nameof(Hide), 0.5f);
     }
 
-    void OnMouseDown()
+    private void OnMouseDown()
     {
         Hit();
     }
