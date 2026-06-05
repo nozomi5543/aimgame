@@ -42,6 +42,7 @@ public class Gun : MonoBehaviour
             playerCamera = Camera.main.transform;
         }
 
+        // 銃が真っすぐ向くように、positionのxを変更 0.2⇒0 BY FUKE
         gunStartPosition = gunModel.localPosition;
     }
 
