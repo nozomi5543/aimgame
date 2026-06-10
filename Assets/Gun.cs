@@ -128,11 +128,5 @@ public class Gun : MonoBehaviour
             0,
             -gunKickBack
         );
-
-        // カメラを少し上へ
-        if (playerCamera != null)
-        {
-            playerCamera.Rotate(-recoilUp, 0, 0);
-        }
     }
 }

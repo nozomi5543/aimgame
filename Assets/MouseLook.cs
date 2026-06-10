@@ -2,40 +2,75 @@ using UnityEngine;
 
 public class MouseLook : MonoBehaviour
 {
-    public Transform playerBody;
+    [Header("銃")]
+    public Transform gunTransform;
+
+    [Header("感度")]
     public float mouseSensitivity = 100f;
 
-    float xRotation = 0f;
+    [Header("銃回転速度")]
+    public float gunRotateSpeed = 3f;
 
-    // リコイル用
+    float gunYaw = 0f;
+    float gunPitch = 0f;
+
+    // リコイル
     float recoilOffset = 0f;
     public float recoilRecoverySpeed = 8f;
 
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+
+        if (gunTransform != null)
+        {
+            Vector3 rot = gunTransform.localEulerAngles;
+            gunYaw = rot.y;
+            gunPitch = rot.x;
+        }
     }
 
     void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        float mouseX =
+            Input.GetAxis("Mouse X") *
+            mouseSensitivity *
+            Time.deltaTime;
 
-        // 通常の視点操作
-        xRotation -= mouseY;
+        float mouseY =
+            Input.GetAxis("Mouse Y") *
+            mouseSensitivity *
+            Time.deltaTime;
 
-        // リコイルは「オフセット」として加える
-        float finalRotation = xRotation - recoilOffset;
-        finalRotation = Mathf.Clamp(finalRotation, -90f, 90f);
+        gunYaw += mouseX * gunRotateSpeed;
+        gunPitch -= mouseY * gunRotateSpeed;
 
-        transform.localRotation = Quaternion.Euler(finalRotation, 0f, 0f);
-        playerBody.Rotate(Vector3.up * mouseX);
+        gunPitch -= recoilOffset;
 
-        // リコイルを戻す
-        recoilOffset = Mathf.Lerp(recoilOffset, 0f, Time.deltaTime * recoilRecoverySpeed);
+        gunPitch = Mathf.Clamp(
+            gunPitch,
+            -45f,
+            45f
+        );
+
+        if (gunTransform != null)
+        {
+            gunTransform.localRotation =
+                Quaternion.Euler(
+                    gunPitch,
+                    gunYaw,
+                    0f
+                );
+        }
+
+        recoilOffset = Mathf.Lerp(
+            recoilOffset,
+            0f,
+            Time.deltaTime *
+            recoilRecoverySpeed
+        );
     }
 
-    // Gunから呼ぶ用
     public void AddRecoil(float amount)
     {
         recoilOffset += amount;
