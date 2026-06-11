@@ -58,13 +58,6 @@ public class Gun : MonoBehaviour
                 return;
             }
 
-            // ゲーム中じゃないなら撃たない
-            if (GameManager.instance != null &&
-                !GameManager.instance.isGameStarted)
-            {
-                return;
-            }
-
             Shoot();
         }
 

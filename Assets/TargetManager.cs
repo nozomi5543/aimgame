@@ -4,13 +4,18 @@ using System.Collections.Generic;
 
 public class TargetManager : MonoBehaviour
 {
-    public Target[] targets; // 9個入れる
+    public Target[] targets;
     public float interval = 2f;
-    public int showCount = 4; // 4つ出す
+    public int showCount = 4;
 
     void Start()
     {
-        // 最初は全部消す
+        if (targets == null || targets.Length == 0)
+        {
+            Debug.LogError("targets が設定されていない！");
+            return;
+        }
+
         foreach (Target t in targets)
         {
             if (t != null)
@@ -33,9 +38,10 @@ public class TargetManager : MonoBehaviour
                         t.Hide();
                 }
 
-                // ランダム順に並べ替え
+                // リスト化
                 List<Target> shuffled = new List<Target>(targets);
 
+                // シャッフル
                 for (int i = 0; i < shuffled.Count; i++)
                 {
                     Target temp = shuffled[i];
@@ -44,8 +50,10 @@ public class TargetManager : MonoBehaviour
                     shuffled[randomIndex] = temp;
                 }
 
-                // 最初の4つを表示
-                for (int i = 0; i < showCount; i++)
+                // 表示数を安全に制限
+                int max = Mathf.Min(showCount, shuffled.Count);
+
+                for (int i = 0; i < max; i++)
                 {
                     if (shuffled[i] != null)
                         shuffled[i].Show();

@@ -1,18 +1,20 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    [Header("ゲーム設定")]
     public bool isGameStarted = false;
+    public bool isCountingDown = false;
 
     public int score = 0;
-    public float time = 30f;
+    public float startTime = 30f;
+    private float time;
 
-    [Header("UI (TextMeshPro)")]
+    [Header("UI")]
     public TMP_Text scoreText;
     public TMP_Text timeText;
     public TMP_Text countdownText;
@@ -28,19 +30,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        UpdateUI();
-
-        // 最初は必ず非表示
-        if (gameOverPanel != null)
-        {
-            gameOverPanel.SetActive(false);
-        }
-        else
-        {
-            Debug.LogWarning("GameOverPanelが未設定！");
-        }
-
-        StartCoroutine(StartCountdown());
+        ResetGame();
     }
 
     void Update()
@@ -58,70 +48,52 @@ public class GameManager : MonoBehaviour
         UpdateUI();
     }
 
+    public void StartGame()
+    {
+        if (isGameStarted || isCountingDown)
+            return;
+
+        StartCoroutine(StartCountdown());
+    }
+
     IEnumerator StartCountdown()
     {
-        isGameStarted = false;
+        isCountingDown = true;
 
-        ShowCountdown("3");
-        yield return new WaitForSeconds(1f);
-
-        ShowCountdown("2");
-        yield return new WaitForSeconds(1f);
-
-        ShowCountdown("1");
-        yield return new WaitForSeconds(1f);
-
-        ShowCountdown("START!");
-        yield return new WaitForSeconds(1f);
+        ShowCountdown("3"); yield return new WaitForSeconds(1f);
+        ShowCountdown("2"); yield return new WaitForSeconds(1f);
+        ShowCountdown("1"); yield return new WaitForSeconds(1f);
+        ShowCountdown("START!"); yield return new WaitForSeconds(1f);
 
         if (countdownText != null)
             countdownText.gameObject.SetActive(false);
 
+        score = 0;
+        time = startTime;
+
+        isCountingDown = false;
         isGameStarted = true;
+
+        UpdateUI();
     }
 
     void ShowCountdown(string text)
     {
-        Debug.Log(text);
+        if (countdownText == null) return;
 
-        if (countdownText != null)
-        {
-            countdownText.gameObject.SetActive(true);
-            countdownText.text = text;
-        }
-        else
-        {
-            Debug.LogWarning("CountdownText未設定");
-        }
+        countdownText.gameObject.SetActive(true);
+        countdownText.text = text;
     }
 
     void GameOver()
     {
         isGameStarted = false;
 
-        Debug.Log("Finish!!");
-        Debug.Log("最終スコア: " + score);
-
-        // パネル強制表示
         if (gameOverPanel != null)
-        {
             gameOverPanel.SetActive(true);
-            gameOverPanel.transform.localPosition = Vector3.zero;
-        }
-        else
-        {
-            Debug.LogWarning("GameOverPanel未設定だから表示されない");
-        }
 
-        // スコア表示
         if (resultText != null)
-        {
-            resultText.text = "SCORE: " + score;
-        }
-        else
-        {
-            Debug.LogWarning("ResultText未設定");
-        }
+            resultText.text = "SCORE : " + score;
     }
 
     public void AddScore(int amount)
@@ -135,9 +107,32 @@ public class GameManager : MonoBehaviour
     void UpdateUI()
     {
         if (scoreText != null)
-            scoreText.text = "Score: " + score;
+            scoreText.text = "Score : " + score;
 
         if (timeText != null)
-            timeText.text = "Time: " + Mathf.CeilToInt(time);
+            timeText.text = "Time : " + Mathf.CeilToInt(time);
+    }
+
+    public void RestartGame()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(
+            UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex
+        );
+    }
+
+    void ResetGame()
+    {
+        score = 0;
+        time = startTime;
+        isGameStarted = false;
+        isCountingDown = false;
+
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(false);
+
+        if (countdownText != null)
+            countdownText.gameObject.SetActive(false);
+
+        UpdateUI();
     }
 }
