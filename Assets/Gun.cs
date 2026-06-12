@@ -42,12 +42,20 @@ public class Gun : MonoBehaviour
             playerCamera = Camera.main.transform;
         }
 
-        // 銃が真っすぐ向くように、positionのxを変更 0.2⇒0 BY FUKE
+        // 初期位置保存
         gunStartPosition = gunModel.localPosition;
     }
 
     void Update()
     {
+        // ゲームオーバー後だけ撃てない
+        if (GameManager.instance != null &&
+            GameManager.instance.isGameOver)
+        {
+            BackRecoil();
+            return;
+        }
+
         // 発射
         if (Input.GetMouseButtonDown(0))
         {
@@ -63,10 +71,10 @@ public class Gun : MonoBehaviour
 
         BackRecoil();
     }
-    
+
     void BackRecoil()
     {
-       // 銃リコイル戻し
+        // 銃リコイル戻し
         gunTargetPosition = Vector3.Lerp(
             gunTargetPosition,
             Vector3.zero,
@@ -81,9 +89,8 @@ public class Gun : MonoBehaviour
 
         gunModel.localPosition =
             gunStartPosition + gunCurrentPosition;
-
     }
-    
+
     void Shoot()
     {
         Debug.Log("発射！");

@@ -10,6 +10,9 @@ public class GameManager : MonoBehaviour
     public bool isGameStarted = false;
     public bool isCountingDown = false;
 
+    // 追加
+    public bool isGameOver = false;
+
     public int score = 0;
     public float startTime = 30f;
     private float time;
@@ -21,7 +24,6 @@ public class GameManager : MonoBehaviour
 
     [Header("ゲームオーバーUI")]
     public GameObject gameOverPanel;
-    public TMP_Text resultText;
 
     void Awake()
     {
@@ -60,16 +62,26 @@ public class GameManager : MonoBehaviour
     {
         isCountingDown = true;
 
-        ShowCountdown("3"); yield return new WaitForSeconds(1f);
-        ShowCountdown("2"); yield return new WaitForSeconds(1f);
-        ShowCountdown("1"); yield return new WaitForSeconds(1f);
-        ShowCountdown("START!"); yield return new WaitForSeconds(1f);
+        ShowCountdown("3");
+        yield return new WaitForSeconds(1f);
+
+        ShowCountdown("2");
+        yield return new WaitForSeconds(1f);
+
+        ShowCountdown("1");
+        yield return new WaitForSeconds(1f);
+
+        ShowCountdown("START!");
+        yield return new WaitForSeconds(1f);
 
         if (countdownText != null)
             countdownText.gameObject.SetActive(false);
 
         score = 0;
         time = startTime;
+
+        // 追加
+        isGameOver = false;
 
         isCountingDown = false;
         isGameStarted = true;
@@ -89,11 +101,11 @@ public class GameManager : MonoBehaviour
     {
         isGameStarted = false;
 
+        // 追加
+        isGameOver = true;
+
         if (gameOverPanel != null)
             gameOverPanel.SetActive(true);
-
-        if (resultText != null)
-            resultText.text = "SCORE : " + score;
     }
 
     public void AddScore(int amount)
@@ -124,8 +136,12 @@ public class GameManager : MonoBehaviour
     {
         score = 0;
         time = startTime;
+
         isGameStarted = false;
         isCountingDown = false;
+
+        // 追加
+        isGameOver = false;
 
         if (gameOverPanel != null)
             gameOverPanel.SetActive(false);
