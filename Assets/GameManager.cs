@@ -25,6 +25,15 @@ public class GameManager : MonoBehaviour
     [Header("ゲームオーバーUI")]
     public GameObject gameOverPanel;
 
+    [Header("音")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip bgmSound;
+    [SerializeField] private AudioClip countDownSound;
+    [SerializeField] private AudioClip gameStartSound;
+    [SerializeField] private AudioClip gameOverSound;
+    [SerializeField] private float seVolume = 1f;
+    [SerializeField] private float bgmVolume = 0.5f;
+
     private int oldScore = -1;
     private int oldTime = -1;
 
@@ -66,16 +75,23 @@ public class GameManager : MonoBehaviour
         isCountingDown = true;
 
         ShowCountdown("3");
+        audioSource.PlayOneShot(countDownSound);
         yield return new WaitForSeconds(1f);
 
         ShowCountdown("2");
+        audioSource.PlayOneShot(countDownSound);
         yield return new WaitForSeconds(1f);
 
         ShowCountdown("1");
+        audioSource.PlayOneShot(countDownSound);
         yield return new WaitForSeconds(1f);
 
         ShowCountdown("START!");
+        audioSource.PlayOneShot(gameStartSound);
         yield return new WaitForSeconds(1f);
+
+        audioSource.volume = bgmVolume;
+        audioSource.PlayOneShot(bgmSound);
 
         if (countdownText != null)
             countdownText.gameObject.SetActive(false);
@@ -109,6 +125,9 @@ public class GameManager : MonoBehaviour
 
         if (gameOverPanel != null)
             gameOverPanel.SetActive(true);
+
+        audioSource.volume = seVolume;
+        audioSource.PlayOneShot(gameOverSound);
     }
 
     public void AddScore(int amount)
@@ -132,7 +151,10 @@ public class GameManager : MonoBehaviour
         if (oldScore != score)
         {
             oldScore = score;
-            AimEventDispatcher.Fire("updateScore", new object[] { score });
+            if (score >= 0)
+            {
+                AimEventDispatcher.Fire("updateScore", new object[] { score });
+            }
         }
 
         if (oldTime != intTime)

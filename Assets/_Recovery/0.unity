@@ -375,6 +375,7 @@ GameObject:
   m_Component:
   - component: {fileID: 215836915}
   - component: {fileID: 215836914}
+  - component: {fileID: 215836916}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -403,6 +404,13 @@ MonoBehaviour:
   timeText: {fileID: 1533636056}
   countdownText: {fileID: 2027117385}
   gameOverPanel: {fileID: 2095867939}
+  audioSource: {fileID: 215836916}
+  bgmSound: {fileID: 8300000, guid: 0ea133ed50f04a741bdc706ed6b323b4, type: 3}
+  countDownSound: {fileID: 8300000, guid: fb08d79872e06a540a6e9eed68e74e74, type: 3}
+  gameStartSound: {fileID: 8300000, guid: b29a595dcbe7e3143a1839abda3fbd7a, type: 3}
+  gameOverSound: {fileID: 8300000, guid: 39fe46adbf512234990039da74dd37be, type: 3}
+  seVolume: 1
+  bgmVolume: 0.4
 --- !u!4 &215836915
 Transform:
   m_ObjectHideFlags: 0
@@ -418,6 +426,103 @@ Transform:
   m_Children: []
   m_Father: {fileID: 498698087}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &215836916
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 215836913}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &218588896
 GameObject:
   m_ObjectHideFlags: 0
@@ -1210,7 +1315,7 @@ PrefabInstance:
     - target: {fileID: 4907466430256064642, guid: 6d02d0ff180d0c44d961c7dc648c6748, type: 3}
       propertyPath: hitSound
       value: 
-      objectReference: {fileID: 8300000, guid: 1cc98f571c3ee3e4da9491e7656e0df3, type: 3}
+      objectReference: {fileID: 8300000, guid: b09482c5eaa98d840a002018a75bea01, type: 3}
     - target: {fileID: 4907466430256064642, guid: 6d02d0ff180d0c44d961c7dc648c6748, type: 3}
       propertyPath: scoreValue
       value: -2
@@ -1754,7 +1859,7 @@ PrefabInstance:
     - target: {fileID: 4907466430256064642, guid: 6d02d0ff180d0c44d961c7dc648c6748, type: 3}
       propertyPath: hitSound
       value: 
-      objectReference: {fileID: 8300000, guid: 1cc98f571c3ee3e4da9491e7656e0df3, type: 3}
+      objectReference: {fileID: 8300000, guid: b95d743b985245248bcc81e9eb2bc4bf, type: 3}
     - target: {fileID: 4907466430256064642, guid: 6d02d0ff180d0c44d961c7dc648c6748, type: 3}
       propertyPath: scoreValue
       value: 2
@@ -2223,7 +2328,7 @@ PrefabInstance:
     - target: {fileID: 4907466430256064642, guid: 6d02d0ff180d0c44d961c7dc648c6748, type: 3}
       propertyPath: hitSound
       value: 
-      objectReference: {fileID: 8300000, guid: 1cc98f571c3ee3e4da9491e7656e0df3, type: 3}
+      objectReference: {fileID: 8300000, guid: b95d743b985245248bcc81e9eb2bc4bf, type: 3}
     - target: {fileID: 4907466430256064642, guid: 6d02d0ff180d0c44d961c7dc648c6748, type: 3}
       propertyPath: audioSource
       value: 
@@ -2883,7 +2988,7 @@ PrefabInstance:
     - target: {fileID: 4907466430256064642, guid: 6d02d0ff180d0c44d961c7dc648c6748, type: 3}
       propertyPath: hitSound
       value: 
-      objectReference: {fileID: 8300000, guid: 1cc98f571c3ee3e4da9491e7656e0df3, type: 3}
+      objectReference: {fileID: 8300000, guid: b09482c5eaa98d840a002018a75bea01, type: 3}
     - target: {fileID: 4907466430256064642, guid: 6d02d0ff180d0c44d961c7dc648c6748, type: 3}
       propertyPath: scoreValue
       value: -1
@@ -3306,7 +3411,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '[Developer Panel]'
+  m_text: '[Config] Sound:OtoLogic'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3333,8 +3438,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18
-  m_fontSizeBase: 18
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -6497,7 +6602,7 @@ GameObject:
   - component: {fileID: 1893641099}
   - component: {fileID: 1893641100}
   m_Layer: 5
-  m_Name: DeveloperPanel
+  m_Name: ConfigPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6915,7 +7020,7 @@ PrefabInstance:
     - target: {fileID: 4907466430256064642, guid: 6d02d0ff180d0c44d961c7dc648c6748, type: 3}
       propertyPath: hitSound
       value: 
-      objectReference: {fileID: 8300000, guid: 1cc98f571c3ee3e4da9491e7656e0df3, type: 3}
+      objectReference: {fileID: 8300000, guid: b09482c5eaa98d840a002018a75bea01, type: 3}
     - target: {fileID: 4907466430256064642, guid: 6d02d0ff180d0c44d961c7dc648c6748, type: 3}
       propertyPath: scoreValue
       value: -1
@@ -7546,7 +7651,7 @@ PrefabInstance:
     - target: {fileID: 4907466430256064642, guid: 6d02d0ff180d0c44d961c7dc648c6748, type: 3}
       propertyPath: hitSound
       value: 
-      objectReference: {fileID: 8300000, guid: 1cc98f571c3ee3e4da9491e7656e0df3, type: 3}
+      objectReference: {fileID: 8300000, guid: b95d743b985245248bcc81e9eb2bc4bf, type: 3}
     - target: {fileID: 4907466430256064642, guid: 6d02d0ff180d0c44d961c7dc648c6748, type: 3}
       propertyPath: audioSource
       value: 
