@@ -38,6 +38,8 @@ public class Target : MonoBehaviour
         if (GameManager.instance == null) return;
         if (!GameManager.instance.isGameStarted) return;
 
+        Debug.Log("BlinkEffect:" + this.name);
+
         // スコア加算（1回だけ）
         GameManager.instance.AddScore(scoreValue);
 
@@ -97,10 +99,5 @@ public class Target : MonoBehaviour
 
         if (targetRenderer != null)
             targetRenderer.enabled = true;
-    }
-
-    private void OnMouseDown()
-    {
-        Hit();
     }
 }

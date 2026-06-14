@@ -20,6 +20,7 @@ public class Bullet : MonoBehaviour
         Target target = collision.collider.GetComponentInParent<Target>();
         if (target != null)
         {
+            Debug.Log("ターゲット:" + target.name);
             target.Hit();
             Destroy(gameObject);
             return;

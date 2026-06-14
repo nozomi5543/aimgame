@@ -25,6 +25,9 @@ public class GameManager : MonoBehaviour
     [Header("ゲームオーバーUI")]
     public GameObject gameOverPanel;
 
+    private int oldScore = -1;
+    private int oldTime = -1;
+
     void Awake()
     {
         instance = this;
@@ -121,8 +124,22 @@ public class GameManager : MonoBehaviour
         if (scoreText != null)
             scoreText.text = "Score : " + score;
 
+        int intTime = Mathf.CeilToInt(time);
+
         if (timeText != null)
-            timeText.text = "Time : " + Mathf.CeilToInt(time);
+            timeText.text = "Time : " + intTime;
+
+        if (oldScore != score)
+        {
+            oldScore = score;
+            AimEventDispatcher.Fire("updateScore", new object[] { score });
+        }
+
+        if (oldTime != intTime)
+        {
+            oldTime = intTime;
+            AimEventDispatcher.Fire("updateTime", new object[] { intTime });
+        }
     }
 
     public void RestartGame()

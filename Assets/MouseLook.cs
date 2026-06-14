@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class MouseLook : MonoBehaviour
 {
@@ -18,9 +19,32 @@ public class MouseLook : MonoBehaviour
     float recoilOffset = 0f;
     public float recoilRecoverySpeed = 8f;
 
+    void Awake()
+    {
+        // MiniScript 側から呼ばれるイベント登録
+        AimEventDispatcher.Subscribe("initPos", OnInitPos);
+    }
+
+    void OnDestroy()
+    {
+        AimEventDispatcher.Unsubscribe("initPos", OnInitPos);
+    }
+
+    void OnInitPos(object[] args)
+    {
+        Debug.Log("MouseLook: OnInitPos called");
+
+        if (gunTransform != null)
+        {
+            gunYaw = 0f;
+            gunPitch = 0f;
+            gunTransform.localRotation = Quaternion.Euler(gunYaw, gunPitch, 0f);
+        }
+    }
+
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
 
         if (gunTransform != null)
         {
