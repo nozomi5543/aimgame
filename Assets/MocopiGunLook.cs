@@ -1,3 +1,5 @@
+using System;
+using TMPro;
 using UnityEngine;
 
 public class MocopiGunLook : MonoBehaviour
@@ -11,6 +13,7 @@ public class MocopiGunLook : MonoBehaviour
     [Header("ä¥ìxí≤êÆ")]
     public float yawSensitivity = 150f;
     public float pitchSensitivity = 150f;
+    public TMP_Text yawPitchText;
 
     [Header("ÉäÉRÉCÉãê›íË")]
     public float recoilRecoverySpeed = 8f;
@@ -61,5 +64,23 @@ public class MocopiGunLook : MonoBehaviour
     public void AddRecoil(float amount)
     {
         recoilOffset += amount;
+    }
+
+    public void SetYawSensitivity(float value)
+    {
+        yawSensitivity = Mathf.CeilToInt(value);
+        if (yawPitchText != null)
+        {
+            yawPitchText.text = $"Yaw:{yawSensitivity} Pitch:{pitchSensitivity}";
+        }
+    }
+
+    public void SetPitchSensitivity(float value)
+    {
+        pitchSensitivity = Mathf.CeilToInt(value);
+        if (yawPitchText != null)
+        {
+            yawPitchText.text = $"Yaw:{yawSensitivity} Pitch:{pitchSensitivity}";
+        }
     }
 }
