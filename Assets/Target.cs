@@ -8,18 +8,22 @@ public class Target : MonoBehaviour
     [SerializeField] private AudioClip hitSound;
 
     [Header("スコア")]
-    [SerializeField] private int scoreValue = 1;
+    [SerializeField] private int normalScoreValue = 1;
+    [SerializeField] private int bonusScoreValue = 10;
 
     [Header("見た目")]
     [SerializeField] private Renderer targetRenderer;
+
+    [Header("マテリアル")]
+    [SerializeField] private Material normalMaterial;
+    [SerializeField] private Material bonusMaterial;
 
     [Header("点滅設定")]
     [SerializeField] private float blinkDuration = 0.5f;
     [SerializeField] private float blinkInterval = 0.08f;
 
     private Coroutine blinkCoroutine;
-
-    private bool isHit = false; // ⭐これ追加（超重要）
+    private bool isHit = false;
 
     private void Start()
     {
@@ -27,11 +31,34 @@ public class Target : MonoBehaviour
         {
             targetRenderer = GetComponent<Renderer>();
         }
+
+        UpdateMaterial();
+    }
+
+    private void Update()
+    {
+        UpdateMaterial();
+    }
+
+    private void UpdateMaterial()
+    {
+        if (targetRenderer == null) return;
+        if (GameManager.instance == null) return;
+
+        if (GameManager.instance.IsBonusTime())
+        {
+            if (bonusMaterial != null)
+                targetRenderer.material = bonusMaterial;
+        }
+        else
+        {
+            if (normalMaterial != null)
+                targetRenderer.material = normalMaterial;
+        }
     }
 
     public void Hit()
     {
-        // 💥 ここが核心（これで完全防止）
         if (isHit) return;
         isHit = true;
 
@@ -40,23 +67,27 @@ public class Target : MonoBehaviour
 
         Debug.Log("BlinkEffect:" + this.name);
 
-        // スコア加算（1回だけ）
-        GameManager.instance.AddScore(scoreValue);
+        int addScore = normalScoreValue;
 
-        // 音
+        if (GameManager.instance.IsBonusTime())
+        {
+            addScore = bonusScoreValue;
+        }
+
+        GameManager.instance.AddScore(addScore);
+
         if (audioSource != null && hitSound != null)
         {
             audioSource.PlayOneShot(hitSound);
         }
 
-        // 点滅
         if (blinkCoroutine != null)
         {
             StopCoroutine(blinkCoroutine);
         }
+
         blinkCoroutine = StartCoroutine(BlinkEffect());
 
-        // 消す
         Invoke(nameof(Hide), 0.6f);
     }
 
@@ -92,12 +123,16 @@ public class Target : MonoBehaviour
     {
         gameObject.SetActive(true);
     }
+
     private void OnEnable()
     {
-        // 🔥 復活対策（超重要）
         isHit = false;
 
         if (targetRenderer != null)
+        {
             targetRenderer.enabled = true;
+        }
+
+        UpdateMaterial();
     }
 }

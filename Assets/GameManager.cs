@@ -9,8 +9,6 @@ public class GameManager : MonoBehaviour
     [Header("ゲーム設定")]
     public bool isGameStarted = false;
     public bool isCountingDown = false;
-
-    // 追加
     public bool isGameOver = false;
 
     public int score = 0;
@@ -99,9 +97,7 @@ public class GameManager : MonoBehaviour
         score = 0;
         time = startTime;
 
-        // 追加
         isGameOver = false;
-
         isCountingDown = false;
         isGameStarted = true;
 
@@ -119,8 +115,6 @@ public class GameManager : MonoBehaviour
     void GameOver()
     {
         isGameStarted = false;
-
-        // 追加
         isGameOver = true;
 
         if (gameOverPanel != null)
@@ -138,6 +132,11 @@ public class GameManager : MonoBehaviour
         UpdateUI();
     }
 
+    public bool IsBonusTime()
+    {
+        return isGameStarted && time <= 10f;
+    }
+
     void UpdateUI()
     {
         if (scoreText != null)
@@ -151,6 +150,7 @@ public class GameManager : MonoBehaviour
         if (oldScore != score)
         {
             oldScore = score;
+
             if (score >= 0)
             {
                 AimEventDispatcher.Fire("updateScore", new object[] { score });
@@ -178,8 +178,6 @@ public class GameManager : MonoBehaviour
 
         isGameStarted = false;
         isCountingDown = false;
-
-        // 追加
         isGameOver = false;
 
         if (gameOverPanel != null)
