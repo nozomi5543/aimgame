@@ -23,6 +23,29 @@ public class MocopiGunLook : MonoBehaviour
     private float currentYaw = 0f;
     private float currentPitch = 0f;
 
+    void Awake()
+    {
+        // MiniScript ‘¤‚©‚çŒÄ‚Î‚ê‚éƒCƒxƒ“ƒg“o˜^
+        AimEventDispatcher.Subscribe("initPos", OnInitPos);
+    }
+
+    void OnDestroy()
+    {
+        AimEventDispatcher.Unsubscribe("initPos", OnInitPos);
+    }
+
+    void OnInitPos(object[] args)
+    {
+        Debug.Log("MocopiGunLook: OnInitPos called");
+
+        if (gunTransform != null)
+        {
+            currentPitch = 0f;
+            currentYaw = 0f;
+            gunTransform.localRotation = Quaternion.Euler(currentPitch, currentYaw, 0f);
+        }
+    }
+
     void Start()
     {
         if (rightHandTransform != null)
