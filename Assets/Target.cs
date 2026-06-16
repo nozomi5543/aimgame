@@ -59,6 +59,16 @@ public class Target : MonoBehaviour
 
     public void Hit()
     {
+        HitRtn();
+    }
+
+    public void HitCenter(int turbo)
+    {
+        HitRtn(turbo);
+    }
+
+    private void HitRtn(int turbo = 1)
+    {
         if (isHit) return;
         isHit = true;
 
@@ -67,11 +77,11 @@ public class Target : MonoBehaviour
 
         Debug.Log("BlinkEffect:" + this.name);
 
-        int addScore = normalScoreValue;
+        int addScore = normalScoreValue * turbo;
 
         if (GameManager.instance.IsBonusTime())
         {
-            addScore = bonusScoreValue;
+            addScore = bonusScoreValue * turbo;
         }
 
         GameManager.instance.AddScore(addScore);

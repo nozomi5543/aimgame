@@ -4,6 +4,13 @@ public class Bullet : MonoBehaviour
 {
     private bool hasHit = false;
 
+    [SerializeField]
+    private float centerRange = 0.25f;
+
+    [Header("中央ヒット時の倍率")]
+    [SerializeField]
+    private int turbo = 2;
+
     void Start()
     {
         Destroy(gameObject, 5f);
@@ -21,7 +28,17 @@ public class Bullet : MonoBehaviour
         if (target != null)
         {
             Debug.Log("ターゲット:" + target.name);
-            target.Hit();
+
+            // 真ん中に当たったかどうか
+            if (IsCenterHit(collision))
+            {
+                target.HitCenter(turbo);
+            }
+            else
+            {
+                target.Hit();
+            }
+
             Destroy(gameObject);
             return;
         }
@@ -34,5 +51,21 @@ public class Bullet : MonoBehaviour
         }
 
         Destroy(gameObject);
+    }
+
+    public bool IsCenterHit(Collision collision)
+    {
+        ContactPoint contact = collision.contacts[0];
+        
+        Vector3 center = transform.position;
+        
+        float distance = Vector3.Distance(contact.point, center);
+        if (distance <= centerRange)
+        {
+            Debug.Log("中央付近にヒット");
+            return true;
+        }
+
+        return false;
     }
 }
