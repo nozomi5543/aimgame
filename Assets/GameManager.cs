@@ -62,12 +62,14 @@ public class GameManager : MonoBehaviour
         {
             bonusBgmStarted = true;
 
+            /* COMMENT OUT BY FUKE この処理に負荷がかかっているため、BGMの切り替えは行わない
             audioSource.Stop();
 
             audioSource.clip = bonusBgmSound;
             audioSource.loop = true;
             audioSource.volume = bgmVolume;
             audioSource.Play();
+            */
         }
 
         if (time <= 0)
