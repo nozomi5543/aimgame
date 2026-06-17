@@ -23,6 +23,10 @@ public class MocopiGunLook : MonoBehaviour
     private float currentYaw = 0f;
     private float currentPitch = 0f;
 
+    [Header("MOCOPI用のモデル")]
+    [SerializeField]
+    public Transform mocopiModelTransform;
+
     void Awake()
     {
         // MiniScript 側から呼ばれるイベント登録
@@ -56,6 +60,8 @@ public class MocopiGunLook : MonoBehaviour
 
     void Update()
     {
+        return; // この方法はうまくいかないので、無効にする
+
         if (gunTransform != null && rightHandTransform != null)
         {
             // 1. 今回の移動ベクトルを算出（最新 - 前回）

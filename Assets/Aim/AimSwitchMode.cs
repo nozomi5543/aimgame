@@ -11,11 +11,27 @@ public class AimSwitchMode : MonoBehaviour
     [SerializeField]
     private MocopiGunLook mocopiGunLook;
 
+    [SerializeField]
+    private GameObject mouseGun;
+
+    [SerializeField]
+    private GameObject mocopiModel;
+
     [Header("UI")]
     public TMP_Text buttonText;
 
     private bool isProcessing = false;
     private bool isMouseMode = true;
+
+    void Start()
+    {
+        // 初期状態をマウスモードに設定
+        mouseLook.enabled = true;
+        mocopiGunLook.enabled = false;
+        mouseGun.SetActive(true);
+        mocopiModel.SetActive(false);
+        buttonText.text = "SwitchMode [Now Mouse] (M)";
+    }
 
     void Update()
     {
@@ -53,12 +69,16 @@ public class AimSwitchMode : MonoBehaviour
         {
             mouseLook.enabled = true;
             mocopiGunLook.enabled = false;
+            mouseGun.SetActive(true);
+            mocopiModel.SetActive(false);
             buttonText.text = "SwitchMode [Now Mouse] (M)";
         }
         else
         {
             mouseLook.enabled = false;
             mocopiGunLook.enabled = true;
+            mouseGun.SetActive(false);
+            mocopiModel.SetActive(true);
             buttonText.text = "SwitchMode [Now MotionCapture] (M)";
         }
 
