@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -19,12 +20,26 @@ public class TargetManager : MonoBehaviour
     [Header("切り替え待機時間")]
     public float changeDelay = 0.5f;
 
+    [Header("BONUS TIME画像")]
+    public Image bonusTimeImage;
+
+    [Header("点滅間隔")]
+    public float blinkInterval = 0.25f;
+
+    private Coroutine blinkCoroutine;
+
     void Start()
     {
         foreach (Target t in targets)
         {
             if (t != null)
                 t.Hide();
+        }
+
+        // 最初はBONUS TIME非表示
+        if (bonusTimeImage != null)
+        {
+            bonusTimeImage.gameObject.SetActive(false);
         }
 
         StartCoroutine(GameRoutine());
@@ -62,6 +77,33 @@ public class TargetManager : MonoBehaviour
                 GameManager.instance.IsBonusTime())
             {
                 currentInterval = bonusInterval;
+
+                // BONUS TIME表示開始
+                if (bonusTimeImage != null &&
+                    !bonusTimeImage.gameObject.activeSelf)
+                {
+                    bonusTimeImage.gameObject.SetActive(true);
+
+                    if (blinkCoroutine != null)
+                        StopCoroutine(blinkCoroutine);
+
+                    blinkCoroutine = StartCoroutine(BlinkBonus());
+                }
+            }
+            else
+            {
+                // BONUS TIME終了
+                if (bonusTimeImage != null &&
+                    bonusTimeImage.gameObject.activeSelf)
+                {
+                    if (blinkCoroutine != null)
+                    {
+                        StopCoroutine(blinkCoroutine);
+                        blinkCoroutine = null;
+                    }
+
+                    bonusTimeImage.gameObject.SetActive(false);
+                }
             }
 
             // 表示時間
@@ -79,6 +121,19 @@ public class TargetManager : MonoBehaviour
 
             // ランダム移動
             MoveTargetsRandomly();
+        }
+    }
+
+    IEnumerator BlinkBonus()
+    {
+        while (true)
+        {
+            if (bonusTimeImage != null)
+            {
+                bonusTimeImage.enabled = !bonusTimeImage.enabled;
+            }
+
+            yield return new WaitForSeconds(blinkInterval);
         }
     }
 

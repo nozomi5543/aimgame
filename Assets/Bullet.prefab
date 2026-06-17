@@ -154,4 +154,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bullet
   centerRange: 0.25
-  turbo: 2
+  turbo: 1
