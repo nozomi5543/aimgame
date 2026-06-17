@@ -23,10 +23,31 @@ public class TargetManager : MonoBehaviour
     [Header("BONUS TIME画像")]
     public Image bonusTimeImage;
 
+    [Header("LED枠")]
+    public GameObject[] ledLines;
+
     [Header("点滅間隔")]
     public float blinkInterval = 0.25f;
 
-    private Coroutine blinkCoroutine;
+    [Header("メインライト")]
+    public Light mainLight;
+
+    [Header("通常明るさ")]
+    public float normalIntensity = 1f;
+
+    [Header("ボーナス時明るさ")]
+    public float bonusIntensity = 0.2f;
+
+    [Header("ボーナスタイム発光")]
+    public Renderer[] bonusRenderers;
+
+    [Header("通常発光")]
+    public float normalEmission = 1f;
+
+    [Header("ボーナス発光")]
+    public float bonusEmission = 10f;
+
+    private Coroutine frameBlinkCoroutine;
 
     void Start()
     {
@@ -36,11 +57,17 @@ public class TargetManager : MonoBehaviour
                 t.Hide();
         }
 
-        // 最初はBONUS TIME非表示
         if (bonusTimeImage != null)
         {
             bonusTimeImage.gameObject.SetActive(false);
         }
+
+        if (mainLight != null)
+        {
+            mainLight.intensity = normalIntensity;
+        }
+
+        SetEmission(normalEmission);
 
         StartCoroutine(GameRoutine());
     }
@@ -55,7 +82,6 @@ public class TargetManager : MonoBehaviour
 
         while (true)
         {
-            // ゲーム終了したら停止
             if (GameManager.instance != null &&
                 !GameManager.instance.isGameStarted)
             {
@@ -63,50 +89,77 @@ public class TargetManager : MonoBehaviour
                 continue;
             }
 
-            // 的を表示
+            // 的表示
             foreach (Target t in targets)
             {
                 if (t != null)
                     t.Show();
             }
 
-            // ボーナスタイム判定
             float currentInterval = interval;
 
+            // ボーナスタイム
             if (GameManager.instance != null &&
                 GameManager.instance.IsBonusTime())
             {
                 currentInterval = bonusInterval;
 
-                // BONUS TIME表示開始
-                if (bonusTimeImage != null &&
-                    !bonusTimeImage.gameObject.activeSelf)
+                // BONUS TIME表示
+                if (bonusTimeImage != null)
                 {
+                    bonusTimeImage.enabled = true;
                     bonusTimeImage.gameObject.SetActive(true);
+                }
 
-                    if (blinkCoroutine != null)
-                        StopCoroutine(blinkCoroutine);
+                // マップ暗転
+                if (mainLight != null)
+                {
+                    mainLight.intensity = bonusIntensity;
+                }
 
-                    blinkCoroutine = StartCoroutine(BlinkBonus());
+                // 発光強化
+                SetEmission(bonusEmission);
+
+                // LED枠点滅開始
+                if (frameBlinkCoroutine == null)
+                {
+                    frameBlinkCoroutine = StartCoroutine(BlinkFrame());
                 }
             }
             else
             {
-                // BONUS TIME終了
-                if (bonusTimeImage != null &&
-                    bonusTimeImage.gameObject.activeSelf)
+                // BONUS TIME非表示
+                if (bonusTimeImage != null)
                 {
-                    if (blinkCoroutine != null)
-                    {
-                        StopCoroutine(blinkCoroutine);
-                        blinkCoroutine = null;
-                    }
-
                     bonusTimeImage.gameObject.SetActive(false);
+                }
+
+                // 明るさ戻す
+                if (mainLight != null)
+                {
+                    mainLight.intensity = normalIntensity;
+                }
+
+                // 発光戻す
+                SetEmission(normalEmission);
+
+                // LED点滅停止
+                if (frameBlinkCoroutine != null)
+                {
+                    StopCoroutine(frameBlinkCoroutine);
+                    frameBlinkCoroutine = null;
+                }
+
+                // LED表示状態に戻す
+                foreach (GameObject led in ledLines)
+                {
+                    if (led != null)
+                    {
+                        led.SetActive(true);
+                    }
                 }
             }
 
-            // 表示時間
             yield return new WaitForSeconds(currentInterval);
 
             // 的を消す
@@ -116,21 +169,22 @@ public class TargetManager : MonoBehaviour
                     t.Hide();
             }
 
-            // 切り替え待機
             yield return new WaitForSeconds(changeDelay);
 
-            // ランダム移動
             MoveTargetsRandomly();
         }
     }
 
-    IEnumerator BlinkBonus()
+    IEnumerator BlinkFrame()
     {
         while (true)
         {
-            if (bonusTimeImage != null)
+            foreach (GameObject led in ledLines)
             {
-                bonusTimeImage.enabled = !bonusTimeImage.enabled;
+                if (led != null)
+                {
+                    led.SetActive(!led.activeSelf);
+                }
             }
 
             yield return new WaitForSeconds(blinkInterval);
@@ -156,6 +210,22 @@ public class TargetManager : MonoBehaviour
             {
                 targets[i].transform.position = points[i].position;
             }
+        }
+    }
+
+    void SetEmission(float intensity)
+    {
+        foreach (Renderer r in bonusRenderers)
+        {
+            if (r == null) continue;
+
+            Material mat = r.material;
+
+            mat.EnableKeyword("_EMISSION");
+
+            Color emissionColor = Color.white * intensity;
+
+            mat.SetColor("_EmissionColor", emissionColor);
         }
     }
 }

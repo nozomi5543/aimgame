@@ -25,12 +25,18 @@ public class GameManager : MonoBehaviour
 
     [Header("音")]
     [SerializeField] private AudioSource audioSource;
+
     [SerializeField] private AudioClip bgmSound;
+    [SerializeField] private AudioClip bonusBgmSound;
+
     [SerializeField] private AudioClip countDownSound;
     [SerializeField] private AudioClip gameStartSound;
     [SerializeField] private AudioClip gameOverSound;
+
     [SerializeField] private float seVolume = 1f;
     [SerializeField] private float bgmVolume = 0.5f;
+
+    private bool bonusBgmStarted = false;
 
     private int oldScore = -1;
     private int oldTime = -1;
@@ -50,6 +56,19 @@ public class GameManager : MonoBehaviour
         if (!isGameStarted) return;
 
         time -= Time.deltaTime;
+
+        // 残り10秒でボーナスタイムBGM
+        if (time <= 10f && !bonusBgmStarted)
+        {
+            bonusBgmStarted = true;
+
+            audioSource.Stop();
+
+            audioSource.clip = bonusBgmSound;
+            audioSource.loop = true;
+            audioSource.volume = bgmVolume;
+            audioSource.Play();
+        }
 
         if (time <= 0)
         {
@@ -88,8 +107,11 @@ public class GameManager : MonoBehaviour
         audioSource.PlayOneShot(gameStartSound);
         yield return new WaitForSeconds(1f);
 
+        // 通常BGM開始
+        audioSource.clip = bgmSound;
+        audioSource.loop = true;
         audioSource.volume = bgmVolume;
-        audioSource.PlayOneShot(bgmSound);
+        audioSource.Play();
 
         if (countdownText != null)
             countdownText.gameObject.SetActive(false);
@@ -100,6 +122,8 @@ public class GameManager : MonoBehaviour
         isGameOver = false;
         isCountingDown = false;
         isGameStarted = true;
+
+        bonusBgmStarted = false;
 
         UpdateUI();
     }
@@ -114,6 +138,8 @@ public class GameManager : MonoBehaviour
 
     void GameOver()
     {
+        audioSource.Stop();
+
         isGameStarted = false;
         isGameOver = true;
 
@@ -179,6 +205,8 @@ public class GameManager : MonoBehaviour
         isGameStarted = false;
         isCountingDown = false;
         isGameOver = false;
+
+        bonusBgmStarted = false;
 
         if (gameOverPanel != null)
             gameOverPanel.SetActive(false);
