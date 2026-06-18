@@ -756,7 +756,7 @@ MonoBehaviour:
   gameOverPanel: {fileID: 2095867939}
   audioSource: {fileID: 215836916}
   bgmSound: {fileID: 8300000, guid: 0ea133ed50f04a741bdc706ed6b323b4, type: 3}
-  bonusBgmSound: {fileID: 8300000, guid: 4d6de53221f6fd446a467ac32d416792, type: 3}
+  bonusBgmSound: {fileID: 8300000, guid: d939959ce0b572943b5c49e7acb74330, type: 3}
   countDownSound: {fileID: 8300000, guid: fb08d79872e06a540a6e9eed68e74e74, type: 3}
   gameStartSound: {fileID: 8300000, guid: b29a595dcbe7e3143a1839abda3fbd7a, type: 3}
   gameOverSound: {fileID: 8300000, guid: 39fe46adbf512234990039da74dd37be, type: 3}
@@ -3953,7 +3953,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 210, y: -100}
-  m_SizeDelta: {x: 390.81006, y: 170.0471}
+  m_SizeDelta: {x: 390.81006, y: 170.04712}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1076832723
 MonoBehaviour:
